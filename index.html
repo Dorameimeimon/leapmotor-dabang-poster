@@ -35,7 +35,7 @@ body{margin:0;background:#f5f6f8;color:#1f2329;font-family:-apple-system,"PingFa
 .clear-all{font-size:12px;color:#6b7280;cursor:pointer;text-decoration:underline;}
 .clear-all:hover{color:var(--red);}
 .tablebox{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:auto;}
-table{border-collapse:collapse;width:100%;font-size:12px;table-layout:fixed;}
+table{border-collapse:collapse;width:100%;min-width:960px;font-size:12px;table-layout:fixed;}
 thead th{background:#2b2f36;color:#fff;font-weight:600;padding:8px 4px;text-align:center;border-right:1px solid #3a3f47;vertical-align:middle;white-space:normal;word-break:break-word;line-height:1.35;}
 thead th.grp{background:#b23a30;}
 thead th.grp2{background:#2f6fb0;}
@@ -57,6 +57,20 @@ tbody tr:hover td.bad{background:#ffcdc9;}
 .tab.active{background:var(--red);color:#fff;border-color:var(--red);}
 .sec{display:none;margin-bottom:30px;}
 .sec.active{display:block;}
+/* 手机端：表格横向滚动，避免数据挤成一团 */
+@media (max-width:768px){
+  body{padding:10px;}
+  .wrap{padding:0;}
+  .poster-head{padding:12px 14px;}
+  .poster-head h1{font-size:18px;}
+  .poster-head .cache-hint{font-size:15px;}
+  .tabs{position:sticky;top:0;z-index:10;background:#f5f6f8;padding-top:2px;}
+  .tab{padding:9px 16px;font-size:13px;}
+  .tablebox{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:8px;}
+  table{min-width:920px;}
+  thead th,tbody td{font-size:11px;padding:7px 3px;}
+  tbody td:nth-child(5){white-space:normal;}
+}
 </style></head>
 <body><div class="wrap">
 <div class="poster-head">
