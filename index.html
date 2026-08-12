@@ -481,9 +481,6 @@ function colorA05(i,v,rv){
   if(i===9){ if(rv===''||isNaN(rv)||rv<0.7) return 'bad'; }
   else if(i===10){ if(rv===''||isNaN(rv)||rv<92) return 'bad'; }
   else if(i===11){ if(rv!==''&&!isNaN(rv)&&rv>0.003) return 'bad'; }
-  else if(i===12){ if(rv===''||isNaN(rv)||rv<92) return 'bad'; }
-  else if(i===13){ if(rv===''||isNaN(rv)||rv<92) return 'bad'; }
-  else if(i===14){ if(rv===''||isNaN(rv)||rv<92) return 'bad'; }
   return '';
 }
 initSection({tbody:'a05-tbody',btn:'a05-btn',panel:'a05-panel',list:'a05-list',count:'a05-count',selAll:'a05-selAll',selNone:'a05-selNone',reset:'a05-reset',data:A05_DATA,groups:A05_GROUPS,colorFn:colorA05,colCount:15,numStart:5, raw:A05_RAW, mgrs:A05_MGRS, mbtn:'a05-mbtn', mpanel:'a05-mpanel', mlist:'a05-mlist', mselAll:'a05-mselAll', mselNone:'a05-mselNone'});
