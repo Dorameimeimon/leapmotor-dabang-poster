@@ -376,8 +376,8 @@ function initSection(cfg){
   const mbtn=document.getElementById(cfg.mbtn);
   const mpanel=document.getElementById(cfg.mpanel);
   const mlist=document.getElementById(cfg.mlist);
-  const selected=new Set(cfg.groups);
-  const selectedM=new Set(cfg.mgrs);
+  const selected=new Set();
+  const selectedM=new Set();
   function label(set,all,btnEl,suffix){
     if(set.size===all.length) btnEl.textContent='全部'+suffix;
     else if(set.size===0) btnEl.textContent='未选择';
