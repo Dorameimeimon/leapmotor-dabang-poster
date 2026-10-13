@@ -384,6 +384,17 @@ tbody tr:hover td.bad{background:#ffcdc9;}
 </div>
 <h2 class="sectitle">10月限时全车系打榜 · 华南大区<span class="badge" id="oct-count">0 家门店</span></h2>
 <div class="filterbar">
+  <span class="flabel">零售经理</span>
+  <div class="ms">
+    <button class="ms-btn" id="oct-mbtn">全部零售经理</button>
+    <div class="ms-panel" id="oct-mpanel">
+      <div class="ms-tools">
+        <button id="oct-mselAll">全选</button>
+        <button id="oct-mselNone">清空</button>
+      </div>
+      <div id="oct-mlist"></div>
+    </div>
+  </div>
   <span class="flabel">集团筛选</span>
   <div class="ms">
     <button class="ms-btn" id="oct-btn">全部集团</button>
@@ -548,8 +559,11 @@ const OCT_DATA = [["第一梯队", "海南省", "海口市", "海口零跑中心
 function renderOct(){
   const tbody=document.getElementById('oct-tbody');
   const cnt=document.getElementById('oct-count');
-  // 集团多选：selected 为空集时展示全部；数据行 idx5 = 集团
-  const rows=OCT_DATA.filter(r=>OCT_SEL.size===0||OCT_SEL.has(r[5]));
+  // 双下拉联动（AND）：idx4=零售经理、idx5=集团；空集=该项不参与过滤
+  const rows=OCT_DATA.filter(r=>
+    (OCT_MSEL.size===0||OCT_MSEL.has(r[4])) &&
+    (OCT_SEL.size===0||OCT_SEL.has(r[5]))
+  );
   tbody.innerHTML='';
   if(rows.length===0){
     const tr=document.createElement('tr');const td=document.createElement('td');
@@ -575,23 +589,44 @@ function renderOct(){
     }
   }
   cnt.textContent=rows.length+' 家门店';
-  // 下拉按钮标签：全选/空集都显示「全部集团」
-  const b=document.getElementById('oct-btn');
-  if(OCT_SEL.size===0) b.textContent='全部集团';
-  else if(OCT_SEL.size<=3) b.textContent=[...OCT_SEL].sort((x,y)=>x.localeCompare(y,'zh-CN')).join('、');
-  else b.textContent='已选 '+OCT_SEL.size+' 个';
+  labelBtn('oct-btn',OCT_SEL,'集团');
+  labelBtn('oct-mbtn',OCT_MSEL,'零售经理');
+}
+function labelBtn(id,set,suffix){
+  const b=document.getElementById(id);
+  if(set.size===0) b.textContent='全部'+suffix;
+  else if(set.size<=3) b.textContent=[...set].sort((a,b)=>a.localeCompare(b,'zh-CN')).join('、');
+  else b.textContent='已选 '+set.size+' 个';
 }
 
-const OCT_SEL=new Set();
-// 集团候选项：去重 + 拼音升序
+const OCT_SEL=new Set();    // 选中的集团
+const OCT_MSEL=new Set();   // 选中的零售经理
+// 候选：去重 + 拼音升序
 const OCT_GROUPS=[...new Set(OCT_DATA.map(r=>r[5]))].sort((a,b)=>a.localeCompare(b,'zh-CN'));
-(function(){
+const OCT_MGRS=[...new Set(OCT_DATA.map(r=>r[4]))].sort((a,b)=>a.localeCompare(b,'zh-CN'));
+// 集团下拉候选：随零售经理选择联动 —— 只保留所选经理名下出现的集团
+function availGroups(){
+  if(OCT_MSEL.size===0) return OCT_GROUPS;
+  return [...new Set(OCT_DATA.filter(r=>OCT_MSEL.has(r[4])).map(r=>r[5]))]
+    .sort((a,b)=>a.localeCompare(b,'zh-CN'));
+}
+function initOctFilter(){
   const btn=document.getElementById('oct-btn');
   const panel=document.getElementById('oct-panel');
   const list=document.getElementById('oct-list');
-  function buildList(){
+  const mbtn=document.getElementById('oct-mbtn');
+  const mpanel=document.getElementById('oct-mpanel');
+  const mlist=document.getElementById('oct-mlist');
+  function buildGroupList(){
+    const gs=availGroups();
+    // 已选但因经理切换而失效的集团，自动剔除，避免出现"空结果"
+    [...OCT_SEL].forEach(g=>{if(!gs.includes(g))OCT_SEL.delete(g);});
     list.innerHTML='';
-    for(const g of OCT_GROUPS){
+    if(gs.length===0){
+      const e=document.createElement('div');e.className='ms-opt';e.style.color='#9aa3af';
+      e.textContent='该零售经理名下无集团';list.appendChild(e);return;
+    }
+    for(const g of gs){
       const lbl=document.createElement('label');lbl.className='ms-opt';
       const cb=document.createElement('input');cb.type='checkbox';cb.value=g;cb.checked=OCT_SEL.has(g);
       cb.addEventListener('change',()=>{if(cb.checked)OCT_SEL.add(g);else OCT_SEL.delete(g);renderOct();});
@@ -599,13 +634,40 @@ const OCT_GROUPS=[...new Set(OCT_DATA.map(r=>r[5]))].sort((a,b)=>a.localeCompare
       list.appendChild(lbl);
     }
   }
+  function buildMgrList(){
+    mlist.innerHTML='';
+    for(const m of OCT_MGRS){
+      const lbl=document.createElement('label');lbl.className='ms-opt';
+      const cb=document.createElement('input');cb.type='checkbox';cb.value=m;cb.checked=OCT_MSEL.has(m);
+      cb.addEventListener('change',()=>{
+        if(cb.checked)OCT_MSEL.add(m);else OCT_MSEL.delete(m);
+        buildGroupList();   // 经理变化 → 重建集团候选
+        renderOct();
+      });
+      lbl.appendChild(cb);lbl.appendChild(document.createTextNode(m===''?'（未填写）':m));
+      mlist.appendChild(lbl);
+    }
+  }
   btn.addEventListener('click',e=>{e.stopPropagation();panel.classList.toggle('open');});
   document.addEventListener('click',e=>{if(!panel.contains(e.target)&&e.target!==btn)panel.classList.remove('open');});
-  document.getElementById('oct-selAll').addEventListener('click',()=>{OCT_GROUPS.forEach(g=>OCT_SEL.add(g));buildList();renderOct();});
-  document.getElementById('oct-selNone').addEventListener('click',()=>{OCT_SEL.clear();buildList();renderOct();});
-  document.getElementById('oct-reset').addEventListener('click',()=>{OCT_SEL.clear();buildList();panel.classList.remove('open');renderOct();});
-  buildList();
-})();
+  mbtn.addEventListener('click',e=>{e.stopPropagation();mpanel.classList.toggle('open');});
+  document.addEventListener('click',e=>{if(!mpanel.contains(e.target)&&e.target!==mbtn)mpanel.classList.remove('open');});
+  // 集团：全选按当前可见候选
+  document.getElementById('oct-selAll').addEventListener('click',()=>{availGroups().forEach(g=>OCT_SEL.add(g));buildGroupList();renderOct();});
+  document.getElementById('oct-selNone').addEventListener('click',()=>{OCT_SEL.clear();buildGroupList();renderOct();});
+  // 零售经理：全选按全部经理
+  document.getElementById('oct-mselAll').addEventListener('click',()=>{OCT_MGRS.forEach(m=>OCT_MSEL.add(m));buildGroupList();renderOct();});
+  document.getElementById('oct-mselNone').addEventListener('click',()=>{OCT_MSEL.clear();buildGroupList();renderOct();});
+  // 重置：两个都清空
+  document.getElementById('oct-reset').addEventListener('click',()=>{
+    OCT_SEL.clear();OCT_MSEL.clear();
+    buildGroupList();buildMgrList();
+    panel.classList.remove('open');mpanel.classList.remove('open');
+    renderOct();
+  });
+  buildGroupList();buildMgrList();
+}
+initOctFilter();
 renderOct();
 
 const tabs=document.querySelectorAll('.tab');
