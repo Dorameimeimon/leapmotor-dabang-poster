@@ -359,6 +359,20 @@ tbody tr:hover td.bad{background:#ffcdc9;}
 <!-- ===================== 10月限时全车系打榜 片区 ===================== -->
 <section class="sec active" id="sec-oct">
 <h2 class="sectitle">10月限时全车系打榜 · 华南大区<span class="badge" id="oct-count">0 家门店</span></h2>
+<div class="filterbar">
+  <span class="flabel">集团筛选</span>
+  <div class="ms">
+    <button class="ms-btn" id="oct-btn">全部集团</button>
+    <div class="ms-panel" id="oct-panel">
+      <div class="ms-tools">
+        <button id="oct-selAll">全选</button>
+        <button id="oct-selNone">清空</button>
+      </div>
+      <div id="oct-list"></div>
+    </div>
+  </div>
+  <span class="clear-all" id="oct-reset">重置</span>
+</div>
 <div class="tablebox"><table>
 <colgroup>
 <col style="width:5%"><col style="width:5.5%"><col style="width:6%"><col style="width:14%"><col style="width:6%"><col style="width:5.5%"><col style="width:6%">
@@ -510,13 +524,15 @@ const OCT_DATA = [["华南大区", "海南省", "海口市", "海口零跑中心
 function renderOct(){
   const tbody=document.getElementById('oct-tbody');
   const cnt=document.getElementById('oct-count');
+  // 集团多选：selected 为空集时展示全部；数据行 idx5 = 集团
+  const rows=OCT_DATA.filter(r=>OCT_SEL.size===0||OCT_SEL.has(r[5]));
   tbody.innerHTML='';
-  if(OCT_DATA.length===0){
+  if(rows.length===0){
     const tr=document.createElement('tr');const td=document.createElement('td');
-    td.colSpan=15;td.className='empty';td.textContent='无数据';
+    td.colSpan=15;td.className='empty';td.textContent='无匹配门店';
     tr.appendChild(td);tbody.appendChild(tr);
   } else {
-    for(const r of OCT_DATA){
+    for(const r of rows){
       const tr=document.createElement('tr');
       for(let i=0;i<r.length;i++){
         const td=document.createElement('td');
@@ -534,8 +550,38 @@ function renderOct(){
       tbody.appendChild(tr);
     }
   }
-  cnt.textContent=OCT_DATA.length+' 家门店';
+  cnt.textContent=rows.length+' 家门店';
+  // 下拉按钮标签：全选/空集都显示「全部集团」
+  const b=document.getElementById('oct-btn');
+  if(OCT_SEL.size===0) b.textContent='全部集团';
+  else if(OCT_SEL.size<=3) b.textContent=[...OCT_SEL].sort((x,y)=>x.localeCompare(y,'zh-CN')).join('、');
+  else b.textContent='已选 '+OCT_SEL.size+' 个';
 }
+
+const OCT_SEL=new Set();
+// 集团候选项：去重 + 拼音升序
+const OCT_GROUPS=[...new Set(OCT_DATA.map(r=>r[5]))].sort((a,b)=>a.localeCompare(b,'zh-CN'));
+(function(){
+  const btn=document.getElementById('oct-btn');
+  const panel=document.getElementById('oct-panel');
+  const list=document.getElementById('oct-list');
+  function buildList(){
+    list.innerHTML='';
+    for(const g of OCT_GROUPS){
+      const lbl=document.createElement('label');lbl.className='ms-opt';
+      const cb=document.createElement('input');cb.type='checkbox';cb.value=g;cb.checked=OCT_SEL.has(g);
+      cb.addEventListener('change',()=>{if(cb.checked)OCT_SEL.add(g);else OCT_SEL.delete(g);renderOct();});
+      lbl.appendChild(cb);lbl.appendChild(document.createTextNode(g===''?'（未填写）':g));
+      list.appendChild(lbl);
+    }
+  }
+  btn.addEventListener('click',e=>{e.stopPropagation();panel.classList.toggle('open');});
+  document.addEventListener('click',e=>{if(!panel.contains(e.target)&&e.target!==btn)panel.classList.remove('open');});
+  document.getElementById('oct-selAll').addEventListener('click',()=>{OCT_GROUPS.forEach(g=>OCT_SEL.add(g));buildList();renderOct();});
+  document.getElementById('oct-selNone').addEventListener('click',()=>{OCT_SEL.clear();buildList();renderOct();});
+  document.getElementById('oct-reset').addEventListener('click',()=>{OCT_SEL.clear();buildList();panel.classList.remove('open');renderOct();});
+  buildList();
+})();
 renderOct();
 
 const tabs=document.querySelectorAll('.tab');
