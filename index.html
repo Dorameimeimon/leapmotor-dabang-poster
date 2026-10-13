@@ -50,6 +50,9 @@ td.nw{white-space:nowrap;}
 .pill-in{background:#d7f2dd;color:#137333;}
 .pill-out{background:#fde0e0;color:#c5221f;}
 /* 激励规则表（浅蓝表头，仿源截图） */
+.rules-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 4px;}
+.rules-h h3{margin:0;flex:0 0 auto;}
+.rules-h p{margin:0;flex:1 1 auto;}
 .rule-table{min-width:640px !important;table-layout:fixed;}
 .rule-table thead th{background:#e8f0fb;color:#1f3a5f;border-right:1px solid #c9d9ee;padding:10px 8px;line-height:1.5;}
 .rule-table tbody td{text-align:left;padding:10px 12px;line-height:1.85;border-right:1px solid #eef0f2;vertical-align:top;}
@@ -366,8 +369,7 @@ tbody tr:hover td.bad{background:#ffcdc9;}
 <!-- ===================== 10月限时全车系打榜 片区 ===================== -->
 <section class="sec active" id="sec-oct">
 <div class="rules">
-  <h3>激励规则</h3>
-  <p>首先按各门店体量（10 月全车系锁单目标）进行分档，其次按系数 A（系数 A = 10.11-10.25 期间的日均当期净增锁单量 / 10.1-10.10 的日均当期净增锁单量）进行梯度内排名给予对应激励支持</p>
+  <div class="rules-h"><h3>激励规则</h3><p>首先按各门店体量（10 月全车系锁单目标）进行分档，其次按系数 A（系数 A = 10.11-10.25 期间的日均当期净增锁单量 / 10.1-10.10 的日均当期净增锁单量）进行梯度内排名给予对应激励支持</p></div>
   <div class="tablebox" style="margin-top:10px"><table class="rule-table">
   <colgroup><col style="width:30%"><col style="width:18%"><col style="width:52%"></colgroup>
   <thead><tr>
