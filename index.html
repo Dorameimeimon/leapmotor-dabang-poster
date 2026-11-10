@@ -63,11 +63,13 @@ td.nw{white-space:nowrap;}
 .rules-h p{margin:0;flex:1 1 auto;}
 .rule-table{min-width:640px !important;table-layout:fixed;}
 /* 【政策支持标准】标题与档位金额强调（2026-11-10 新增） */
-.rules .policy-title{font-size:15px;font-weight:700;color:#1f2329;margin:0 0 10px;padding-left:10px;border-left:4px solid var(--red);line-height:1.4;}
+.rules .policy-title{font-size:15px;font-weight:700;color:#1f2329;margin:0 0 10px;padding-left:0;border-left:none;line-height:1.4;}
 /* 政策时间改为纯文字行（2026-11-10 用户要求：不要红色底色） */
 .rules .policy-time{margin:0 0 6px;padding:0;background:none;border:none;color:#1f2329;font-weight:400;font-size:13px;line-height:1.85;}
 .rules .policy-time strong{font-weight:600;color:#1f2329;}
-.rule-table tbody td.amt{font-weight:700;color:#b42318;font-variant-numeric:tabular-nums;}
+/* 政策块整体去红色（2026-11-10 用户要求：不要红色） */
+.rules .policy-body .tag{color:#1f2329;font-weight:600;}
+.rule-table tbody td.amt{font-weight:700;color:#1f2329;font-variant-numeric:tabular-nums;}
 .rule-table thead th{background:#e8f0fb;color:#1f3a5f;border-right:1px solid #c9d9ee;padding:10px 8px;line-height:1.5;}
 .rule-table tbody td{text-align:left;padding:10px 12px;line-height:1.85;border-right:1px solid #eef0f2;vertical-align:top;}
 .rule-table tbody td:nth-child(1),.rule-table tbody td:nth-child(2){text-align:center;vertical-align:middle;}
@@ -450,7 +452,7 @@ tbody tr:hover td.bad{background:#ffcdc9;}
 <div class="rules">
   <h3 class="policy-title">【政策支持标准】</h3>
   <p class="policy-time"><strong>政策时间：</strong>2026年11月1日 00:00 - 2026年11月30日 24:00</p>
-  <p>按 <strong>2026年11月1日 00:00 - 2026年11月30日 24:00</strong> 期间<span class="tag">锁单任务达成率</span>分档，<strong>2026年11月交付的 A05</strong> 按对应档位获取激励；政策时间内交付的车辆，<span class="tag">兑付给交付门店（返利形式）</span>。</p>
+  <p class="policy-body">按 <strong>2026年11月1日 00:00 - 2026年11月30日 24:00</strong> 期间<span class="tag">锁单任务达成率</span>分档，<strong>2026年11月交付的 A05</strong> 按对应档位获取激励；政策时间内交付的车辆，<span class="tag">兑付给交付门店（返利形式）</span>。</p>
   <div style="overflow-x:auto;margin-top:10px;">
     <table class="rule-table">
       <colgroup><col style="width:46%"><col style="width:54%"></colgroup>
