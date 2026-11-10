@@ -62,6 +62,9 @@ td.nw{white-space:nowrap;}
 .rules-h h3{margin:0;flex:0 0 auto;}
 .rules-h p{margin:0;flex:1 1 auto;}
 .rule-table{min-width:640px !important;table-layout:fixed;}
+/* 【政策支持标准】标题与档位金额强调（2026-11-10 新增） */
+.rules .policy-title{font-size:15px;font-weight:700;color:#1f2329;margin:0 0 10px;padding-left:10px;border-left:4px solid var(--red);line-height:1.4;}
+.rule-table tbody td.amt{font-weight:700;color:#b42318;font-variant-numeric:tabular-nums;}
 .rule-table thead th{background:#e8f0fb;color:#1f3a5f;border-right:1px solid #c9d9ee;padding:10px 8px;line-height:1.5;}
 .rule-table tbody td{text-align:left;padding:10px 12px;line-height:1.85;border-right:1px solid #eef0f2;vertical-align:top;}
 .rule-table tbody td:nth-child(1),.rule-table tbody td:nth-child(2){text-align:center;vertical-align:middle;}
@@ -441,6 +444,26 @@ tbody tr:hover td.bad{background:#ffcdc9;}
 
 <!-- ===================== 11月A05锁单冲量专项激励 片区 ===================== -->
 <section class="sec active" id="sec-a05n">
+<div class="rules">
+  <h3 class="policy-title">【政策支持标准】</h3>
+  <div class="time">政策时间：2026年11月1日 00:00 - 2026年11月30日 24:00</div>
+  <p>按 <strong>2026年11月1日 00:00 - 2026年11月30日 24:00</strong> 期间<span class="tag">锁单任务达成率</span>分档，<strong>2026年11月交付的 A05</strong> 按对应档位获取激励；政策时间内交付的车辆，<span class="tag">兑付给交付门店（返利形式）</span>。</p>
+  <div style="overflow-x:auto;margin-top:10px;">
+    <table class="rule-table">
+      <colgroup><col style="width:46%"><col style="width:54%"></colgroup>
+      <thead><tr>
+        <th>2026 年 11 月 A05 锁单任务达成率</th>
+        <th>2026 年 11 月交付 A05 激励金额档位（元/台）</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>&lt; 80%</td><td class="amt">0</td></tr>
+        <tr><td>[80% - 100%)</td><td class="amt">500</td></tr>
+        <tr><td>[100% - 120%)</td><td class="amt">1000</td></tr>
+        <tr><td>≥ 120%</td><td class="amt">2000</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 <div class="boardhead">
 <h2 class="sectitle">11月A05锁单冲量专项激励 · 华南大区<span class="badge" id="a05n-count">0 家</span></h2>
 <div class="filterbar">
